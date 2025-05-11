@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>MapLibre Straatnamen Utrecht</title>
+    <meta name="viewport" content="initial-scale=1,maximum-scale=1,user-scalable=no">
+    <link href="https://unpkg.com/maplibre-gl/dist/maplibre-gl.css" rel="stylesheet" />    
+    <style>
+        body { margin: 0; padding: 0; }
+        #map { position: absolute; top: 0; bottom: 0; width: 100%; }
+    </style>
+</head>
+<body>
+<div id="map"></div>
+
+<script src="https://unpkg.com/maplibre-gl/dist/maplibre-gl.js"></script>
+<script>
+    const selectedStreets = ['1e Atjehstraat','1e Delistraat','2e Atjehstraat','2e Delistraat','Abel Tasmanstraat','Adikade','Alberdingk Thijmstraat','Ambonstraat','Averkampstraat','Bachstraat','Bakhuizen vd Brinkstraat','Balistraat','Bandoengstraat','Bankaplein','Bankastraat','Bataviastraat','Beethovenlaan','Beethovenplein','Bilderdijkstraat','Billitonkade','Billitonstraat','Boeroehof','Bonistraat','Borneostraat','Van den Boschstraat','Busken Huetstraat','Broerestraat','Brucknerstraat','Byronstraat','Cartesiusweg','Celebesstraat','Cervanteslaan','Chopinstraat','J.P. Coenstraat','Cremerstraat','Curaçaostraat','Daendelstraat','Damstraat','Dantelaan','Debussystraat','Dickenslaan','van Diemenstraat','Douwes Dekkerstraat','Evert Cornelislaan','Everard Meijsterlaan','Van Imhoffstraat','Frederik van Eedenstraat','Galeslootstraat','Goethelaan','Groeneweg','Gustav Mahlerstraat','Handelstraat','Hasebroekstraat','Haydnlaan','Haroekoeplein','Heijermansstraat','Hendrika van Tussenbroeklaan','Herderlaan','van Imhoffstraat','Jaffastraat','Jacob Geelstraat','Johan Camphuijsstraat','Johan de Meesterstraat','Johan Wagenaarkade','Joseph Haydnlaan','Javastraat','Kanaalstraat','Kanaalweg','Keulsekade','Kneppelhoutstraat','van Koetsveldstraat','Laan van Nieuw Guinea','Laurens Reaalstraat','Leidsekade','van Lennepstraat','Lessinglaan','van Limburg Brouwerstraat','Lombokstraat','Louis Couperusstraat','Madioenstraat','Madoerastraat','Maetsuykerstraat','Makassarstraat','Malakkastraat','Majellapark','Justus van Maurikstraat','Medanstraat','Mendelsohnstraat','Menodastraat','van Meursstraat','Minahassastraat','Molierelaan','Molukkenstraat','Mozartlaan','MP Lindostraat','Muntkade','Noltheniusstraat','Obihof','Oltmanstraat','Palestrinastraat','Padangstraat','Palembangstraat','van der Palmstraat','Paramaribostraat','Pieter Bothstraat','Petrarcalaan','Petristraat','Poelhekkestraat','Potgieterstraat','Priokstraat','Queridostraat','Racinelaan','Rheijnvis Feithstraat','Van Riebeeckstraat','Richard Holstraat','Richard Wagnerstraat','Riouwstraat','Salawatihof','Sapoerahof','Schillerlaan','H.J. Schimmelplein','H.J. Schimmelstraat','Schubertstraat','Schumannstraat','Shakespearehof','Shakespearelaan','Soendastraat','Spinozaweg','Steijnstraat','Sumatrastraat','Surinamestraat','Tanimbarkade','Ternatestraat','Urlusstraat','Victor Hugoplantsoen','Vleutenseweg','Vosmaerstraat','von Weberstraat','Weltevredenstraat','Winnubstlaan'];
+
+    const map = new maplibregl.Map({
+        container: 'map',
+        style: 'https://tiles.openfreemap.org/styles/liberty',
+        center: [5.094189,52.0911623], 
+        zoom: 14, 
+    });
+
+    map.on('load', () => {
+        map.addLayer({
+            id: 'highlighted-streets',
+            type: 'line',
+            source: 'openmaptiles', 
+            'source-layer': 'transportation_name',
+            filter: ['match', ['get', 'name'], selectedStreets, true, false],
+            paint: {
+                'line-color': '#ff0000',
+                'line-width': 8,
+                'line-opacity': 0.8
+            }
+        });
+
+        map.addLayer({
+            id: 'street-names',
+            type: 'symbol',
+            source: 'openmaptiles', 
+            'source-layer': 'transportation_name',
+            filter: ['match', ['get', 'name'], selectedStreets, true, false],
+            layout: {
+                'text-font': ['Noto Sans Regular'],
+                'text-field': ['get', 'name'],
+                'text-size': 16,
+                'text-offset': [0, 0.6],
+                'text-anchor': 'top'
+            },
+            paint: {
+                'text-color': 'black',
+                'text-halo-color': '#ffffff',
+                'text-halo-width': 2
+            }
+        });
+    });
+
+    map.addControl(new maplibregl.NavigationControl());
+</script>
+
+</body>
+</html>
